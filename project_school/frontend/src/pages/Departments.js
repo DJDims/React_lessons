@@ -2,7 +2,7 @@ import{React, useEffect, useState } from 'react'
 import { Card, ListGroup, ListGroupItem } from 'react-bootstrap';
 import axios from 'axios';
 
-export default function Departments() {
+export default function Departments({depId, onClickDepartment}) {
     const [departments, setDepartment] = useState([]);
 
     useEffect(() => {
@@ -15,12 +15,22 @@ export default function Departments() {
     return (
         <>
             <Card>
-                <ListGroup>
-                    <ListGroupItem style={{cursor: 'pointer'}} key={0}>
+                <ListGroup variant='flush'>
+                    <ListGroupItem 
+                        style={{cursor: 'pointer'}} 
+                        key={0} 
+                        onClick={() => onClickDepartment(0)} 
+                        className={depId === 0 ? 'active' : ''}
+                    >
                         All
                     </ListGroupItem>
                     {departments.map((data) => (
-                        <ListGroupItem style={{cursor: 'pointer'}} key={data.id}>
+                        <ListGroupItem 
+                            style={{cursor: 'pointer'}} 
+                            key={data.id} 
+                            onClick={() => onClickDepartment(data.id)} 
+                            className={depId === data.id ? 'active' : ''}
+                        >
                             {data.name}
                         </ListGroupItem>
                     ))}

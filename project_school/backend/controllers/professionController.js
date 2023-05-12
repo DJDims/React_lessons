@@ -2,7 +2,11 @@ import Profession from '../models/profession.js';
 
 export const findAllProfessions = async(req, res) => {
     try {
-        const professions = await Profession.findAll();
+        const professions = await Profession.findAll({
+            include: 'department',
+            where: {},
+            order: [['name', 'ASC']]
+        });
         res.json(professions);
     } catch(error) {
         res.json({message: error.message});
@@ -11,7 +15,28 @@ export const findAllProfessions = async(req, res) => {
 
 export const findProfessionById = async(req, res) => {
     try {
-        const profession = await Profession.findByPk(req.params.id);
+        const profession = await Profession.findOne({
+            include: 'department',
+            where: {
+                id: req.params.id
+            },
+            order: [['name', 'ASC']]
+        });
+        res.json(profession);
+    } catch(error) {
+        res.json({message: error.message});
+    }
+}
+
+export const findProfessionByDepartmentId = async(req, res) => {
+    try {
+        const profession = await Profession.findAll({
+            include: 'department',
+            where: {
+                department_id: req.params.id
+            },
+            order: [['name', 'ASC']]
+        });
         res.json(profession);
     } catch(error) {
         res.json({message: error.message});
