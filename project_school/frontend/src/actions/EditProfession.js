@@ -1,9 +1,9 @@
 import React from 'react'
 import axios from 'axios'
 import {Container, Form, Button, Row, Col} from 'react-bootstrap'
-import {useNavigate} from 'react-router-dom'
+import {useNavigate, useParams} from 'react-router-dom'
 
-export default function AddProfession() {
+export default function EditProfession() {
 	const [department, setDepartment] = React.useState([]);
 	React.useEffect(() => {
 		const getDepartment = async () => {
@@ -21,10 +21,25 @@ export default function AddProfession() {
 	const [department_id, setDepartment_id] = React.useState(0);
 	
 	const navigate = useNavigate();
+	
+	const {id} = useParams();
 
-	const saveProfession = async (e) => {
+	React.useEffect(() => {
+		const getProfessionById = async () => {
+			const response = await axios.get(`http://localhost:5000/profession/${id}`);
+			setName(response.data.name);
+			setDuration(response.data.duration);
+			setEducation(response.data.education);
+			setDescription(response.data.description);
+			setPoster(response.data.poster);
+			setDepartment_id(response.data.department_id);
+		}
+		getProfessionById();
+	}, [id]);
+
+	const updateProfession = async (e) => {
 		e.preventDefault();
-		await axios.post(`http://localhost:5000/profession`, {
+		await axios.put(`http://localhost:5000/profession/${id}`, {
 			name: name,
 			duration: duration,
 			education: education,
@@ -37,10 +52,10 @@ export default function AddProfession() {
 
 	return (
 		<Container className='mt-1'>
-			<h2 className='text-center'>Add new profession</h2>
+			<h2 className='text-center'>Edit profession {id} - {name}</h2>
 			<Row>
 				<Col md={{span: 7, offset: 2}}>
-					<Form onSubmit={saveProfession}>
+					<Form onSubmit={updateProfession}>
 						<Form.Group controlId='formControlText'>
 							<Form.Label>Name</Form.Label>
 							<Form.Control className='input' type='text' placeholder='Name' value={name} onChange={(e) => setName(e.target.value)} />
@@ -59,18 +74,18 @@ export default function AddProfession() {
 						</Form.Group>
 						<Form.Group controlId='formControlText'>
 							<Form.Label>Department</Form.Label>
-							<Form.Select name='department_id' onChange={(e) => setDepartment_id(e.target.value)}>
+							<Form.Select name='department_id' onChange={(e) => setDepartment_id(e.target.value)} value={department_id}>
 								<option key={0} value={0}>Select department</option>
 								{department.map((data) => (
 									<option key={data.id} value={data.id}>{data.name}</option>
-									))}
+								))}
 							</Form.Select>
 						</Form.Group>
 						<Form.Group controlId='formControlText'>
 							<Form.Label>Poster</Form.Label>
 							<Form.Control className='input' type='text' placeholder='Poster' value={poster} onChange={(e) => setPoster(e.target.value)} />
 						</Form.Group>
-						<Button variant='success' type='submit' className='mt-3'>Save profession</Button>
+						<Button variant='success' type='submit' className='mt-3'>Update profession</Button>
 						<Button variant='primary' className='mt-3 ms-3' href='/profession'>Profession list</Button>
 					</Form>
 				</Col>
