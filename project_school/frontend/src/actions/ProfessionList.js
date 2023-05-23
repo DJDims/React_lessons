@@ -54,7 +54,7 @@ export default function ProfessionList() {
                                         <Link to={`/editprofession/${profession.id}`} className="me-1">
                                             <Button variant="success">Edit</Button>
                                         </Link>
-                                        <Button variant="danger" onClick={() => deleteProfession(profession.id)} varian="danger" size="sm">Delete</Button>
+                                        <Button variant="danger" onClick={() => deleteProfession(profession.id)} varian="danger">Delete</Button>
                                     </td>
                                 </tr>
                             ))}
